@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>📼 Recordings Timeline</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #111;
+            color: #00FF99;
+            font-family: 'Press Start 2P', cursive;
+            padding: 30px;
+            margin: 0;
+            overflow-y: hidden; /* Hide vertical scrollbar */
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #FF00FF;
+            text-shadow: 0 0 8px #FF00FF;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Timeline container: horizontally scrollable */
+        .timeline {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding-bottom: 20px;
+            scroll-behavior: smooth;
+        }
+
+        /* Each recording block */
+        .recording {
+            flex: 0 0 auto;
+            width: 320px;
+            text-align: center;
+            border: 3px solid #00FF99;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: #1a1a1a;
+            box-shadow: 0 0 15px #00FF99;
+        }
+
+        .recording video {
+            width: 100%;
+            height: auto;
+            border: 3px solid #00FF99;
+            box-shadow: 0 0 15px #00FF99;
+            image-rendering: pixelated;
+            border-radius: 4px;
+        }
+
+        /* Date and time label below video */
+        .timestamp {
+            margin-top: 8px;
+            font-size: 10px;
+            color: #FFFF00;
+            text-shadow: 0 0 4px #FFFF00;
+            white-space: nowrap;
+            user-select: none;
+        }
+
+        /* Back link styling */
+        p.back-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        a {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #FF6600;
+            color: #000;
+            text-decoration: none;
+            border: 3px solid #fff;
+            box-shadow: 0 0 10px #FF6600;
+            font-size: 12px;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        a:hover {
+            background-color: #FF3300;
+        }
+
+        /* Scrollbar styling for modern browsers */
+        .timeline::-webkit-scrollbar {
+            height: 10px;
+        }
+        .timeline::-webkit-scrollbar-track {
+            background: #222;
+        }
+        .timeline::-webkit-scrollbar-thumb {
+            background: #00FF99;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>📁 Motion Recordings Timeline</h1>
+
+    {% if files %}
+    <div class="timeline">
+        {% for file in files %}
+        <div class="recording">
+            <video controls>
+                <source src="{{ url_for('serve_recording', filename=file) }}" type="video/webm">
+                Your browser does not support the video tag.
+            </video>
+            <div class="timestamp">
+                {% set parts = file.split('_') %}
+                {% if parts|length >= 3 %}
+                    {% set date_part = parts[1] %}
+                    {% set time_part = parts[2].split('.')[0] %}
+                    {% set year = date_part[0:4] %}
+                    {% set month = date_part[4:6] %}
+                    {% set day = date_part[6:8] %}
+                    {% set hour = time_part[0:2] %}
+                    {% set minute = time_part[2:4] %}
+                    {% set second = time_part[4:6] %}
+                    {{ day }}/{{ month }}/{{ year }} <br> {{ hour }}:{{ minute }}:{{ second }}
+                {% else %}
+                    Unknown date/time
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+    
+    </div>
+    {% else %}
+        <p style="text-align:center; font-size: 14px; color: #FF9999;">No recordings found.</p>
+    {% endif %}
+
+    <p class="back-link"><a href="/">⬅ Back to Stream</a></p>
+</body>
+</html>

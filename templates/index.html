@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🕹️ Stream</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #111;
+            color: #00FF99;
+            font-family: 'Press Start 2P', cursive;
+            text-align: center;
+            padding: 30px;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #FF00FF;
+            text-shadow: 0 0 8px #FF00FF;
+        }
+
+        h2 {
+            font-size: 16px;
+            margin-top: 30px;
+            color: #00FFFF;
+            text-shadow: 0 0 6px #00FFFF;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #FF6600;
+            color: #000;
+            text-decoration: none;
+            border: 3px solid #fff;
+            box-shadow: 0 0 10px #FF6600;
+        }
+
+        a:hover {
+            background-color: #FF3300;
+        }
+
+        img {
+            border: 4px solid #00FF99;
+            margin-top: 20px;
+            box-shadow: 0 0 20px #00FF99;
+        }
+
+        #motion {
+            font-size: 14px;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        img {
+            max-width: 70%;
+            height: auto;
+            border: 4px solid #0f0;
+            image-rendering: pixelated;
+        }
+    </style>
+    
+</head>
+<body>
+   
+    <img src="{{ url_for('video') }}">
+
+    <h2>Motion Status: <span id="motion">Loading...</span></h2>
+
+    <script>
+        async function updateMotion() {
+            try {
+                const res = await fetch('/motion-status');
+                const data = await res.json();
+                document.getElementById('motion').textContent = data.motion ? "🔴 DETECTED" : "🟢 CLEAR";
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        setInterval(updateMotion, 1000);
+        updateMotion();
+    </script>
+
+    <p><a href="/recordings">📼 View Recordings</a></p>
+</body>
+</html>
