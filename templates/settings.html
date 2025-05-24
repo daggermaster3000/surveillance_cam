@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>⚙️ Settings</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #111;
+      color: #00FF99;
+      font-family: 'Press Start 2P', cursive;
+      text-align: center;
+      padding: 30px;
+    }
+
+    input, label {
+      font-family: inherit;
+      margin: 10px;
+    }
+
+    input {
+      padding: 5px;
+      font-size: 14px;
+      width: 300px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 12px;
+      background-color: #FF6600;
+      color: #000;
+      border: 3px solid #fff;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #FF3300;
+    }
+
+    a {
+      color: #FF00FF;
+      display: inline-block;
+      margin-top: 30px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>⚙️ Settings</h1>
+
+  <form method="POST">
+    <div>
+      <label>📁 Recordings Folder:</label><br>
+      <input type="text" name="recordings_folder" value="{{ settings.recordings_folder }}">
+    </div>
+
+    <div>
+      <label>🎯 Motion Threshold:</label><br>
+      <input type="number" name="motion_threshold" min="0" max="10000" value="{{ settings.motion_threshold }}">
+    </div>
+
+    <button type="submit">💾 Save Settings</button>
+  </form>
+
+  <a href="/">⬅ Back to Stream</a>
+</body>
+</html>
