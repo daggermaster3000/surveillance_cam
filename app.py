@@ -4,6 +4,7 @@ import datetime
 import os
 import threading
 import json
+import requests
 
 app = Flask(__name__)
 app.secret_key = 'a_super_secret_key_123'  # Replace with a secure value
@@ -39,6 +40,27 @@ def save_settings(settings):
     with open(SETTINGS_FILE, 'w') as f:
         json.dump(settings, f)
 
+def send_ha_notification(title, message):
+    token = "enter ha token"
+    ha_url = "http://YOURIP:8123/api/services/notify/mobile_app_gov_public"
+
+    headers = {
+    "Authorization": f"Bearer {token}",
+    "Content-Type": "application/json",
+    }
+
+    payload = {
+        "message": message,
+        "title": title
+    }
+
+    response = requests.post(ha_url, headers=headers, json=payload)
+
+    if response.status_code == 200:
+        print("Notification sent!")
+    else:
+        print(f"Failed to send notification: {response.text}")        
+
 # Load initial settings
 settings = load_settings()
 os.makedirs(settings["recordings_folder"], exist_ok=True)
@@ -65,6 +87,7 @@ def motion_detection_loop():
         if motion:
             if not motion_detected:
                 print("🔴 Motion detected", flush=True)
+                send_ha_notification("📼 Motion Alert", "New recording started on the Raspberry Pi")
                 timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
                 os.makedirs(save_path, exist_ok=True)
                 filename = f"{save_path}/motion_{timestamp}.webm"
@@ -163,3 +186,5 @@ if __name__ == "__main__":
     motion_thread.start()
 
     app.run(host="0.0.0.0", port=5050, debug=False)
+
+# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIwN2IyYTI3Yzc0ZWQ0OGU0YjQ4OWU0YzI4MDRmYjg3ZiIsImlhdCI6MTc0ODA5MTk5NywiZXhwIjoyMDYzNDUxOTk3fQ.4QSKaE9vrM-uEfMG4DJkJit-mfj6mGX-EToghuh92HM
